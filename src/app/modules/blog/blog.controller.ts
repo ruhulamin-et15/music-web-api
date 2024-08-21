@@ -52,13 +52,13 @@ const updateBlog = catchAsync(async (req, res) => {
 
 const deletedBlog = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const updatedBlog = await blogService.deleteBlogIntoDB(id);
+  const deletedBlog = await blogService.deleteBlogIntoDB(id);
 
   sendResponse(res, {
     success: true,
     statusCode: 200,
     message: "blog deleted successfully",
-    data: updatedBlog,
+    data: deletedBlog,
   });
 });
 

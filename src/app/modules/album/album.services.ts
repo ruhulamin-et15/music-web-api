@@ -1,15 +1,13 @@
 import { TAlbum } from "./album.interface";
 import { Album } from "./album.model";
 
-
-
 const createAlbumIntoDB = async (payload: TAlbum) => {
   const result = await Album.create(payload);
 
   return result;
 };
 const getAlbumFromDB = async () => {
-  const result = await Album.find();
+  const result = await Album.find().populate("artistId");
   return result;
 };
 const getSingleAlbumFromDB = async (id: string) => {
