@@ -16,4 +16,6 @@ export interface TSong {
   genre: string;
   category: ObjectId;
   lyrics: Lyric[];
+  isFavourite: boolean;
+  album: ObjectId;
 }

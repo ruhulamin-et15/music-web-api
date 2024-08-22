@@ -20,6 +20,15 @@ const albumSchema = new Schema<TAlbum>({
     type: Date,
     required: [true, "released date is required"],
   },
+  songs: {
+    type: Array,
+    ref: "Song",
+    default: [],
+  },
+  genre: {
+    type: String,
+    required: [true, "genre is required"],
+  },
 });
 
 // Create the model

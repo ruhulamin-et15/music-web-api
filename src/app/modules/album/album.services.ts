@@ -7,7 +7,7 @@ const createAlbumIntoDB = async (payload: TAlbum) => {
   return result;
 };
 const getAlbumFromDB = async () => {
-  const result = await Album.find().populate("artistId");
+  const result = await Album.find().populate("artistId").populate("songs");
   return result;
 };
 const getSingleAlbumFromDB = async (id: string) => {

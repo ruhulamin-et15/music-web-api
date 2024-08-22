@@ -23,9 +23,17 @@ const getSongsByCategoryFromDB = async (id: string) => {
   return songs;
 };
 
+const updateSongIntoDB = async (id: string, payload: Partial<TSong>) => {
+  const updatedData = await Song.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+  return updatedData;
+};
+
 export const songServices = {
   createSongIntoDB,
   getSongFromDB,
   getSingleSongFromDB,
   getSongsByCategoryFromDB,
+  updateSongIntoDB,
 };

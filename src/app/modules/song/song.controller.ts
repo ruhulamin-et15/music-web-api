@@ -2,10 +2,19 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { songServices } from "./song.services";
+import { Album } from "../album/album.model";
 
 const createSong = catchAsync(async (req, res) => {
+  const { songAlbum } = req.body;
   const result = await songServices.createSongIntoDB(req.body);
 
+  const songId = result._id;
+
+  await Album.findByIdAndUpdate(
+    songAlbum,
+    { $push: { songs: songId } },
+    { new: true }
+  );
   sendResponse(res, {
     success: true,
     statusCode: 201,
@@ -158,10 +167,48 @@ const getDurationByLyrics = catchAsync(async (req, res) => {
   });
 });
 
+const favHandler = catchAsync(async (req, res) => {
+  const { id } = req.params;
+
+  const song = await songServices.getSingleSongFromDB(id);
+
+  if (!song) {
+    sendResponse(res, {
+      success: false,
+      statusCode: 404,
+      message: "song not found",
+      data: {},
+    });
+  }
+
+  if (song?.isFavourite === false) {
+    await songServices.updateSongIntoDB(id, {
+      isFavourite: true,
+    });
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "update song from unfavourite to favourite",
+      data: { IsFavourite: true },
+    });
+  } else {
+    await songServices.updateSongIntoDB(id, {
+      isFavourite: false,
+    });
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "update song from favourite to unfavourite",
+      data: { IsFavourite: false },
+    });
+  }
+});
+
 export const songController = {
   createSong,
   getAllSong,
   getSingleSong,
   getSongsByCategory,
   getDurationByLyrics,
+  favHandler,
 };

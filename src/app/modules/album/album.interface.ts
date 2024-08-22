@@ -5,4 +5,6 @@ export interface TAlbum {
   albumImage: string;
   artistId: ObjectId;
   releasedDate: Date;
+  songs: ObjectId;
+  genre: string;
 }
