@@ -167,8 +167,15 @@ const changePasswordIntoDB = async (
   return result;
 };
 
+//get single user
+const getSingleUserIntoDB = async (id: string) => {
+  const user = await UserModel.findById(id).populate("playList");
+  return user;
+};
+
 export const UserService = {
   createUserIntoDB,
   loginUser,
   changePasswordIntoDB,
+  getSingleUserIntoDB,
 };

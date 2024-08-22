@@ -3,6 +3,7 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { songServices } from "./song.services";
 import { Album } from "../album/album.model";
+import { UserModel } from "../../user/user.model";
 
 const createSong = catchAsync(async (req, res) => {
   const { songAlbum } = req.body;
@@ -168,7 +169,7 @@ const getDurationByLyrics = catchAsync(async (req, res) => {
 });
 
 const favHandler = catchAsync(async (req, res) => {
-  const { id } = req.params;
+  const { id, userId } = req.params;
 
   const song = await songServices.getSingleSongFromDB(id);
 
@@ -182,9 +183,15 @@ const favHandler = catchAsync(async (req, res) => {
   }
 
   if (song?.isFavourite === false) {
-    await songServices.updateSongIntoDB(id, {
+    const updateSong = await songServices.updateSongIntoDB(id, {
       isFavourite: true,
     });
+    const favSongId = updateSong?._id;
+    await UserModel.findByIdAndUpdate(
+      userId,
+      { $push: { playList: favSongId } },
+      { new: true }
+    );
     sendResponse(res, {
       success: true,
       statusCode: 200,
@@ -192,9 +199,16 @@ const favHandler = catchAsync(async (req, res) => {
       data: { IsFavourite: true },
     });
   } else {
-    await songServices.updateSongIntoDB(id, {
+    const updateSong = await songServices.updateSongIntoDB(id, {
       isFavourite: false,
     });
+
+    const favSongId = updateSong?._id;
+    await UserModel.findByIdAndUpdate(
+      userId,
+      { $pull: { playList: favSongId } },
+      { new: true }
+    );
     sendResponse(res, {
       success: true,
       statusCode: 200,

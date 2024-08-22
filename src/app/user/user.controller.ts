@@ -52,8 +52,21 @@ const changePassword = catchAsync(async (req, res) => {
   }
 });
 
+const getPlayList = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const user = await UserService.getSingleUserIntoDB(userId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: user?.playList ? "play list retrived success" : "",
+    data: user?.playList ? user?.playList : "play list not found",
+  });
+});
+
 export const UserControllers = {
   createUser,
   loginUser,
   changePassword,
+  getPlayList,
 };

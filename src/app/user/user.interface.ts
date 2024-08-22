@@ -1,5 +1,5 @@
 import { UserModel } from "./user.model";
-import { Document, Model, Types } from "mongoose";
+import { Document, Model, ObjectId, Types } from "mongoose";
 import { USER_ROLE } from "./user.constant";
 
 // user interface
@@ -11,6 +11,7 @@ export interface TUser {
   role: "admin" | "user";
   isDeleted: boolean;
   status: "blocked" | "active";
+  playList: ObjectId;
 }
 
 export type TLoginUser = {
